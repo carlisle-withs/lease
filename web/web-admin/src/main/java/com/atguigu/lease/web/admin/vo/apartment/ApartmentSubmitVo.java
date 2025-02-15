@@ -8,6 +8,9 @@ import lombok.Data;
 
 import java.util.List;
 
+/**
+ * 设置公寓信息的视图实体，用于全部公寓信息的保存
+ */
 
 @Schema(description = "公寓信息")
 @Data

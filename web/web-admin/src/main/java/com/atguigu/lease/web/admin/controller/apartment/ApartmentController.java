@@ -4,13 +4,16 @@ package com.atguigu.lease.web.admin.controller.apartment;
 import com.atguigu.lease.common.result.Result;
 import com.atguigu.lease.model.entity.ApartmentInfo;
 import com.atguigu.lease.model.enums.ReleaseStatus;
+import com.atguigu.lease.web.admin.service.ApartmentInfoService;
 import com.atguigu.lease.web.admin.vo.apartment.ApartmentDetailVo;
 import com.atguigu.lease.web.admin.vo.apartment.ApartmentItemVo;
 import com.atguigu.lease.web.admin.vo.apartment.ApartmentQueryVo;
 import com.atguigu.lease.web.admin.vo.apartment.ApartmentSubmitVo;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,27 +24,39 @@ import java.util.List;
 @RequestMapping("/admin/apartment")
 public class ApartmentController {
 
+    @Autowired
+    private ApartmentInfoService apartmentInfoService;
+
     @Operation(summary = "保存或更新公寓信息")
     @PostMapping("saveOrUpdate")
+    // Post方式的方法，参数是一个RequestBody请求体，类型是ApartmentSubmitVo
     public Result saveOrUpdate(@RequestBody ApartmentSubmitVo apartmentSubmitVo) {
+        apartmentInfoService.saveOrUpdateApartment(apartmentSubmitVo);
         return Result.ok();
     }
 
     @Operation(summary = "根据条件分页查询公寓列表")
     @GetMapping("pageItem")
+    // 分页查询功能，返回值是一个Result结果类，包含了一个IPage类型的对象；参数是IPage所需要的current和size，以及一个ApartmentQueryVo的视图对象
     public Result<IPage<ApartmentItemVo>> pageItem(@RequestParam long current, @RequestParam long size, ApartmentQueryVo queryVo) {
-        return Result.ok();
+        // 根据current和size两个参数，构建一个Page对象
+        Page<ApartmentItemVo> apartmentItemVoPage = new Page<>(current, size);
+        // 使用service层的pageItem方法，返回值就是需要的IPage对象
+        IPage<ApartmentItemVo> result = apartmentInfoService.pageItem(apartmentItemVoPage, queryVo);
+        return Result.ok(result);
     }
 
     @Operation(summary = "根据ID获取公寓详细信息")
     @GetMapping("getDetailById")
     public Result<ApartmentDetailVo> getDetailById(@RequestParam Long id) {
-        return Result.ok();
+        ApartmentDetailVo result = apartmentInfoService.getDetailById(id);
+        return Result.ok(result);
     }
 
     @Operation(summary = "根据id删除公寓信息")
     @DeleteMapping("removeById")
     public Result removeById(@RequestParam Long id) {
+        apartmentInfoService.removeApartmentById(id);
         return Result.ok();
     }
 
