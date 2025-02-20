@@ -50,6 +50,9 @@ public class ApartmentInfoServiceImpl extends ServiceImpl<ApartmentInfoMapper, A
     private FeeValueMapper feeValueMapper;
 
     @Autowired
+    private RoomInfoMapper roomInfoMapper;
+
+    @Autowired
     private GraphInfoService graphInfoService;
 
     @Autowired
@@ -60,9 +63,6 @@ public class ApartmentInfoServiceImpl extends ServiceImpl<ApartmentInfoMapper, A
 
     @Autowired
     private ApartmentFeeValueService apartmentFeeValueService;
-
-    @Autowired
-    private RoomInfoMapper roomInfoMapper;
 
     @Override
     public void saveOrUpdateApartment(ApartmentSubmitVo apartmentSubmitVo) {
@@ -161,6 +161,7 @@ public class ApartmentInfoServiceImpl extends ServiceImpl<ApartmentInfoMapper, A
 
     @Override
     public ApartmentDetailVo getDetailById(Long id) {
+
         // 1. 查询公寓信息
         ApartmentInfo apartmentInfo = apartmentInfoMapper.selectById(id);
 

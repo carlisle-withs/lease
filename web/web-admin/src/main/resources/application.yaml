@@ -4,7 +4,7 @@ server:
 spring:
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:mysql://192.168.94.198:3306/lease
+    url: jdbc:mysql://10.21.151.7:3307/lease
     username: root
     password: shijian1017.
     hikari:
@@ -15,6 +15,14 @@ spring:
       maximum-pool-size: 12
       minimum-idle: 10
       pool-name: SPHHikariPool
+  jackson:
+    time-zone: GMT+8
+  data:
+    redis:
+      host: 10.21.151.7
+      port: 6380
+      database: 0
+      password: shijian1017.
 
 springdoc:
   default-flat-param-object: true
@@ -29,7 +37,7 @@ mybatis-plus:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
 minio:
-  endpoint: http://192.168.94.198:9000
+  endpoint: http://10.21.151.7:9000
   access-key: minioadmin
-  secret-key: minioadmin
+  secret-key: shijian1017.
   bucket-name: lease

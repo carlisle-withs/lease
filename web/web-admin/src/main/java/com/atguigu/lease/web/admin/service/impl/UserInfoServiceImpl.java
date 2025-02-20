@@ -1,9 +1,13 @@
 package com.atguigu.lease.web.admin.service.impl;
 
+import com.atguigu.lease.web.admin.vo.user.UserInfoQueryVo;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.atguigu.lease.model.entity.UserInfo;
 import com.atguigu.lease.web.admin.service.UserInfoService;
 import com.atguigu.lease.web.admin.mapper.UserInfoMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -15,6 +19,13 @@ import org.springframework.stereotype.Service;
 public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo>
     implements UserInfoService{
 
+    @Autowired
+    private UserInfoMapper userInfoMapper;
+
+    @Override
+    public IPage<UserInfo> pageItem(Page<UserInfo> userInfoPage, UserInfoQueryVo queryVo) {
+        return userInfoMapper.pageItem(userInfoPage, queryVo);
+    }
 }
 
 

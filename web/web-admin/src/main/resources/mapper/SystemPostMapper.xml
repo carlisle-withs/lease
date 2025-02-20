@@ -4,4 +4,12 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.atguigu.lease.web.admin.mapper.SystemPostMapper">
 
+    <select id="pageItem" resultType="com.atguigu.lease.model.entity.SystemPost">
+        select
+            id, code, name, description, status
+        from
+            lease.system_post
+        where
+            system_post.is_deleted = 0
+    </select>
 </mapper>

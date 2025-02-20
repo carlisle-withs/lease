@@ -1,6 +1,8 @@
 package com.atguigu.lease.web.admin.service;
 
 import com.atguigu.lease.model.entity.SystemPost;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
@@ -10,4 +12,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
 */
 public interface SystemPostService extends IService<SystemPost> {
 
+    IPage<SystemPost> pageItem(Page<SystemPost> page);
 }

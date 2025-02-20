@@ -2,6 +2,8 @@ package com.atguigu.lease.web.admin.mapper;
 
 import com.atguigu.lease.model.entity.SystemPost;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
 /**
 * @author liubo
@@ -11,6 +13,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 */
 public interface SystemPostMapper extends BaseMapper<SystemPost> {
 
+    IPage<SystemPost> pageItem(Page<SystemPost> page);
 }
 
 
