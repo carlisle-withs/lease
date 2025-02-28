@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.atguigu.lease.web.app.mapper.ViewAppointmentMapper">
+
+
+
+    <resultMap id="AppointmentDetailVoMap" type="com.atguigu.lease.web.app.vo.appointment.AppointmentDetailVo" autoMapping="true">
+        <id property="id" column="id"/>
+        <association property="apartmentItemVo" javaType="com.atguigu.lease.web.app.vo.apartment.ApartmentItemVo" autoMapping="true">
+            <id property="id" column="apt_id"/>
+            <result property="name" column="apt_name"/>
+            <result property="phone" column="apt_phone"/>
+            <result property="minRent" column="min_rent"/>
+            <collection property="labelInfoList" ofType="com.atguigu.lease.model.entity.LabelInfo" select="selectLabelInfoList" column="apt_id" autoMapping="true"/>
+            <collection property="graphVoList" ofType="com.atguigu.lease.model.entity.GraphInfo" select="selectGraphVoList" column="apt_id" autoMapping="true"/>
+        </association>
+    </resultMap>
+
+    <select id="selectLabelInfoList" resultType="com.atguigu.lease.model.entity.LabelInfo">
+        select
+            li.id, li.type, li.name
+        from
+            apartment_label al
+        left join
+            label_info li on al.label_id = li.id and li.is_deleted = 0
+        where
+            al.apartment_id = #{apt_id} and al.is_deleted = 0
+    </select>
+
+    <select id="selectGraphVoList" resultType="com.atguigu.lease.model.entity.GraphInfo">
+        select
+            name, url
+        from
+            graph_info
+        where
+            graph_info.is_deleted = 0 and graph_info.item_type = 1 and graph_info.item_id = #{apt_id}
+    </select>
+
+
+    <!-- listItem方法 -->
+    <resultMap id="AppointmentItemVoMap" type="com.atguigu.lease.web.app.vo.appointment.AppointmentItemVo">
+        <id property="id" column="id"/>
+        <result property="apartmentName" column="apartment_name"/>
+        <result property="appointmentTime" column="appointment_time"/>
+        <result property="appointmentStatus" column="appointment_status"/>
+        <collection property="graphVoList" ofType="com.atguigu.lease.web.app.vo.graph.GraphVo">
+            <result property="name" column="name"/>
+            <result property="url" column="url"/>
+        </collection>
+    </resultMap>
+    <select id="listItem" resultMap="AppointmentItemVoMap">
+        select
+            va.id,
+            va.apartment_id,
+            ai.name apartment_name,
+            va.appointment_time,
+            va.appointment_status,
+            gi.name,
+            gi.url
+        from
+            view_appointment va
+        left join
+            apartment_info ai on va.apartment_id = ai.id and ai.is_deleted = 0
+        left join
+            graph_info gi on gi.item_id = va.apartment_id and gi.item_type = 1 and gi.is_deleted = 0
+        where
+            va.is_deleted = 0 and va.user_id = #{userId}
+    </select>
+
+    <select id="getDetailById" resultMap="AppointmentDetailVoMap">
+        select
+            va.id,
+            va.user_id,
+            va.name,
+            va.phone,
+            va.apartment_id,
+            va.appointment_time,
+            va.additional_info,
+            va.appointment_status,
+            ai.id apt_id,
+            ai.name apt_name,
+            ai.introduction,
+            ai.district_id,
+            ai.district_name,
+            ai.city_id,
+            ai.city_name,
+            ai.province_id,
+            ai.province_name,
+            ai.address_detail,
+            ai.latitude,
+            ai.longitude,
+            ai.phone apt_phone,
+            ai.is_release,
+            min(ri.rent) min_rent
+        from
+            view_appointment va
+        left join
+            apartment_info ai on va.apartment_id = ai.id and ai.is_deleted = 0
+        left join
+            room_info ri on ri.apartment_id = ai.id and ri.is_deleted = 0
+        where
+            va.is_deleted = 0 and va.id = #{id}
+        group by
+            ri.apartment_id
+    </select>
+
+</mapper>

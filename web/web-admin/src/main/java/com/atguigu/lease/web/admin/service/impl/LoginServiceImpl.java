@@ -45,6 +45,7 @@ public class LoginServiceImpl implements LoginService {
 
     @Override
     public String login(LoginVo loginVo) {
+
         // 1. 首先判断传入的验证码是否存在
         if (loginVo.getCaptchaCode() == null) {
             throw new LeaseException(ResultCodeEnum.ADMIN_CAPTCHA_CODE_NOT_FOUND);

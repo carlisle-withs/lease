@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.atguigu.lease.web.app.mapper.ApartmentInfoMapper">
+
+    <resultMap id="ApartmentDetailMap" type="com.atguigu.lease.web.app.vo.apartment.ApartmentDetailVo" autoMapping="true">
+        <id property="id" column="id"/>
+        <result property="minRent" column="min_rent"/>
+        <collection property="graphVoList" ofType="com.atguigu.lease.web.app.vo.graph.GraphVo" select="selectGraphVoListByApartmentId" column="id"/>
+        <collection property="labelInfoList" ofType="com.atguigu.lease.model.entity.LabelInfo" select="selectLabelInfoListByApartmentId" column="id"/>
+        <collection property="facilityInfoList" ofType="com.atguigu.lease.model.entity.FacilityInfo" select="selectFacilityInfoListByApartmentId" column="id"/>
+    </resultMap>
+
+    <select id="selectGraphVoListByApartmentId" resultType="com.atguigu.lease.web.app.vo.graph.GraphVo">
+        select
+            name, url
+        from
+            graph_info
+        where
+            graph_info.is_deleted = 0 and graph_info.item_type = 1 and graph_info.item_id = #{id}
+    </select>
+    <select id="selectLabelInfoListByApartmentId" resultType="com.atguigu.lease.model.entity.LabelInfo">
+        select
+            li.id, li.type, li.name
+        from
+            apartment_label al
+        left join
+            label_info li on al.label_id = li.id and li.is_deleted = 0
+        where
+            al.is_deleted = 0 and al.apartment_id = #{id}
+    </select>
+    <select id="selectFacilityInfoListByApartmentId" resultType="com.atguigu.lease.model.entity.FacilityInfo">
+        select
+            fi.id, fi.type, fi.name, fi.icon
+        from
+            apartment_facility af
+        left join
+            facility_info fi on af.facility_id = fi.id and fi.is_deleted = 0
+        where
+            af.is_deleted = 0 and af.apartment_id = #{id}
+    </select>
+
+    <select id="getDetailById" resultMap="ApartmentDetailMap">
+        select
+            ai.id,
+            ai.name,
+            ai.introduction,
+            ai.district_id,
+            ai.district_name,
+            ai.city_id,
+            ai.city_name,
+            ai.province_id,
+            ai.province_name,
+            ai.address_detail,
+            ai.latitude,
+            ai.longitude,
+            ai.phone,
+            ai.is_release,
+            min(ri.rent) min_rent
+        from
+            apartment_info ai
+        left join
+            room_info ri on ri.apartment_id = ai.id and ri.is_deleted = 0
+        where
+            ai.is_deleted = 0 and ai.id = #{id}
+    </select>
+</mapper>
