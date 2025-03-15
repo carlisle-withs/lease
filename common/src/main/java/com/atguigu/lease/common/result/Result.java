@@ -34,11 +34,12 @@ public class Result<T> {
         return result;
     }
 
-
+    // 如果是ok，则默认传入的枚举实例就是SUCCESS
     public static <T> Result<T> ok(T data) {
         return build(data, ResultCodeEnum.SUCCESS);
     }
 
+    // 如果没有数据，则只需要返回状态码
     public static <T> Result<T> ok() {
         return Result.ok(null);
     }
